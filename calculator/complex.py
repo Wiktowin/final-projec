@@ -1,7 +1,5 @@
 import math
 
-impimort math
-
 def power(base, exponent):
     return math.pow(base, exponent)
 
