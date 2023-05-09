@@ -6,8 +6,6 @@ def power(base, exponent):
 def logarithm(number):
     return math.log(number)
 
-import math
-
 def square_root(number):
     return math.sqrt(number)
 def factorial(number):
