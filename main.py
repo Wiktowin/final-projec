@@ -1,17 +1,41 @@
+import requests
+import webbrowser
 
-from calculator.simple import (sum, multiply)
-from calculator.complex import (power, logarithm)
 
-result1 = sum(2, 3)
-result2 = multiply(4, 5)
-result3 = power(2, 3)
-result4 = logarithm(10)
+def play_random_song_by_artist(artist_name, num_songs):
+    url = "https://deezerdevs-deezer.p.rapidapi.com/search"
+    headers = {
+        "X-RapidAPI-Key": "027cd83b71msha642256f80cb07cp119bb0jsn0b02d88ec97b",
+        "X-RapidAPI-Host": "deezerdevs-deezer.p.rapidapi.com"
+    }
+    params = {
+        "q": artist_name
+    }
 
-from calculator.complex import (power, logarithm, square_root, factorial)
+    response = requests.get(url, headers=headers, params=params)
+    data = response.json()
 
-result1 = sum(2, 3)
-result2 = multiply(4, 5)
-result3 = power(2, 3)
-result4 = logarithm(10)
-result5 = square_root(25)
-result6 = factorial(5)
+    if 'data' in data:
+        songs = data['data']
+        artist_songs = [song for song in songs if song['artist']['name'].lower() == artist_name.lower()]
+
+    if artist_songs:
+        for i, song in enumerate(artist_songs[:num_songs], start=1):
+            song_url = song['preview']
+            print(f"{i}. {song['title']} by {song['artist']['name']}")
+
+        selected_song = input("Enter the number of the song you want to play (1-10): ")
+        if selected_song.isdigit() and 1 <= int(selected_song) <= num_songs:
+            song_index = int(selected_song) - 1
+            selected_song_url = artist_songs[song_index]['preview']
+            webbrowser.open(selected_song_url)
+            return
+
+        print("Invalid song number.")
+        return
+
+    print("No songs found for the artist.")
+
+
+artist = input("Enter the artist name: ")
+play_random_song_by_artist(artist, 10)
